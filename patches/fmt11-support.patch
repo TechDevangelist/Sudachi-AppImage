@@ -1,0 +1,1299 @@
+From 7730d14b4a267c9579636a18af73d4252385e15f Mon Sep 17 00:00:00 2001
+From: Zephyron <zephyron@citron-emu.orgq>
+Date: Sun, 16 Feb 2025 13:38:05 +1000
+Subject: [PATCH] build: upgrade fmt and SDL2
+
+Update fmt library to version 11.0.2 and make necessary adjustments:
+- Replace fmt/format.h includes with fmt/ranges.h
+- Add const qualifiers to formatter::format functions
+- Update CMake to require fmt version 11
+
+Additional dependency updates:
+- Update SDL2 bundled version from 2.28.2 to 2.32.0
+- Update catch2 to version 3.8.0
+- Update vcpkg baseline to c82f74667287d3dc386bce81e44964370c91a289
+---
+ CMakeLists.txt                                   |  4 ++--
+ src/citron/about_dialog.cpp                      |  2 +-
+ src/citron/applets/qt_amiibo_settings.cpp        |  2 +-
+ src/citron/compatibility_list.cpp                |  2 +-
+ src/citron/configuration/configure_per_game.cpp  |  2 +-
+ src/citron/configuration/configure_ringcon.cpp   |  2 +-
+ src/citron/configuration/input_profiles.cpp      |  2 +-
+ src/citron/debugger/wait_tree.cpp                |  2 +-
+ src/citron/discord_impl.cpp                      |  2 +-
+ src/citron/game_list.cpp                         |  2 +-
+ src/citron/main.cpp                              |  2 +-
+ src/citron_cmd/emu_window/emu_window_sdl2_gl.cpp |  2 +-
+ .../emu_window/emu_window_sdl2_null.cpp          |  2 +-
+ src/citron_cmd/emu_window/emu_window_sdl2_vk.cpp |  2 +-
+ src/common/common_precompiled_headers.h          |  2 +-
+ src/common/dynamic_library.cpp                   |  2 +-
+ src/common/hex_util.h                            |  2 +-
+ src/common/logging/backend.cpp                   |  2 +-
+ src/common/logging/formatter.h                   |  4 ++--
+ src/common/logging/log.h                         |  2 +-
+ src/common/nvidia_flags.cpp                      |  2 +-
+ src/common/typed_address.h                       |  8 ++++----
+ src/common/uuid.cpp                              |  2 +-
+ src/core/arm/dynarmic/dynarmic_cp15.cpp          |  4 ++--
+ src/core/crypto/key_manager.h                    |  2 +-
+ src/core/debugger/gdbstub.cpp                    |  1 +
+ src/core/file_sys/bis_factory.cpp                |  2 +-
+ src/core/file_sys/fs_save_data_types.h           |  2 +-
+ src/core/file_sys/system_archive/ng_word.cpp     |  2 +-
+ src/core/hle/service/acc/profile_manager.cpp     |  2 +-
+ src/core/hle/service/ldn/ldn_types.h             |  2 +-
+ src/core/hle/service/nfc/common/device.cpp       |  2 +-
+ .../hle/service/nvdrv/devices/nvhost_ctrl.cpp    |  2 +-
+ src/core/hle/service/nvdrv/nvdrv.cpp             |  2 +-
+ src/core/hle/service/psc/time/common.h           | 10 +++++-----
+ src/core/hle/service/service.cpp                 |  2 +-
+ src/core/hle/service/sockets/bsd.cpp             |  2 +-
+ src/core/perf_stats.cpp                          |  2 +-
+ src/core/reporter.cpp                            |  2 +-
+ src/hid_core/frontend/emulated_devices.cpp       |  2 +-
+ src/input_common/drivers/camera.cpp              |  2 +-
+ src/input_common/drivers/gc_adapter.cpp          |  2 +-
+ src/input_common/drivers/joycon.cpp              |  2 +-
+ src/input_common/drivers/mouse.cpp               |  2 +-
+ src/input_common/drivers/tas_input.cpp           |  2 +-
+ src/input_common/drivers/udp_client.cpp          |  2 +-
+ src/input_common/drivers/virtual_amiibo.cpp      |  2 +-
+ .../backend/glasm/glasm_emit_context.h           |  2 +-
+ .../backend/glasm/reg_alloc.cpp                  |  2 +-
+ src/shader_recompiler/backend/glasm/reg_alloc.h  | 16 ++++++++--------
+ .../backend/glsl/glsl_emit_context.h             |  2 +-
+ src/shader_recompiler/backend/glsl/var_alloc.cpp |  2 +-
+ .../backend/spirv/spirv_emit_context.cpp         |  2 +-
+ src/shader_recompiler/frontend/ir/attribute.cpp  |  2 +-
+ src/shader_recompiler/frontend/ir/attribute.h    |  4 ++--
+ src/shader_recompiler/frontend/ir/condition.cpp  |  2 +-
+ src/shader_recompiler/frontend/ir/condition.h    |  4 ++--
+ src/shader_recompiler/frontend/ir/flow_test.cpp  |  2 +-
+ src/shader_recompiler/frontend/ir/flow_test.h    |  4 ++--
+ src/shader_recompiler/frontend/ir/opcodes.h      |  6 +++---
+ src/shader_recompiler/frontend/ir/pred.h         |  4 ++--
+ src/shader_recompiler/frontend/ir/program.cpp    |  2 +-
+ src/shader_recompiler/frontend/ir/reg.h          |  4 ++--
+ src/shader_recompiler/frontend/ir/type.h         |  4 ++--
+ .../frontend/maxwell/control_flow.cpp            |  2 +-
+ .../frontend/maxwell/location.h                  |  4 ++--
+ src/shader_recompiler/frontend/maxwell/opcodes.h |  4 ++--
+ .../frontend/maxwell/structured_control_flow.cpp |  2 +-
+ .../renderer_vulkan/pipeline_statistics.cpp      |  2 +-
+ .../renderer_vulkan/renderer_vulkan.cpp          |  2 +-
+ .../renderer_vulkan/vk_staging_buffer_pool.cpp   |  2 +-
+ src/video_core/texture_cache/formatter.h         | 12 ++++++------
+ src/video_core/texture_cache/image_info.cpp      |  2 +-
+ .../vulkan_common/nsight_aftermath_tracker.cpp   |  2 +-
+ src/web_service/verify_user_jwt.h                |  2 +-
+ src/web_service/web_backend.cpp                  |  2 +-
+ vcpkg.json                                       |  6 +++---
+ 77 files changed, 111 insertions(+), 110 deletions(-)
+
+diff -urN b/CMakeLists.txt a/CMakeLists.txt
+--- b/CMakeLists.txt	2025-03-25 06:52:41.000000000 -0400
++++ a/CMakeLists.txt	2025-03-31 16:22:11.217169700 -0400
+@@ -309,7 +309,7 @@
+ # Enforce the search mode of non-required packages for better and shorter failure messages
+ find_package(Boost 1.79.0 REQUIRED context)
+ find_package(enet 1.3 MODULE)
+-find_package(fmt 9 REQUIRED)
++find_package(fmt 11 REQUIRED)
+ find_package(LLVM 17.0.2 MODULE COMPONENTS Demangle)
+ find_package(lz4 REQUIRED)
+ find_package(nlohmann_json 3.8 REQUIRED)
+diff -urN b/src/common/common_precompiled_headers.h a/src/common/common_precompiled_headers.h
+--- b/src/common/common_precompiled_headers.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/common/common_precompiled_headers.h	2025-03-31 16:08:01.243537000 -0400
+@@ -8,7 +8,7 @@
+ #include <chrono>
+ #include <memory>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/assert.h"
+ #include "common/common_types.h"
+diff -urN b/src/common/dynamic_library.cpp a/src/common/dynamic_library.cpp
+--- b/src/common/dynamic_library.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/common/dynamic_library.cpp	2025-03-31 16:08:01.248705300 -0400
+@@ -4,7 +4,7 @@
+ #include <string>
+ #include <utility>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/dynamic_library.h"
+ 
+diff -urN b/src/common/hex_util.h a/src/common/hex_util.h
+--- b/src/common/hex_util.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/common/hex_util.h	2025-03-31 16:08:01.253707200 -0400
+@@ -8,7 +8,7 @@
+ #include <cstddef>
+ #include <string>
+ #include <vector>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "common/assert.h"
+ #include "common/common_types.h"
+ 
+diff -urN b/src/common/logging/backend.cpp a/src/common/logging/backend.cpp
+--- b/src/common/logging/backend.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/common/logging/backend.cpp	2025-03-31 16:08:01.257705900 -0400
+@@ -6,7 +6,7 @@
+ #include <climits>
+ #include <thread>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #ifdef _WIN32
+ #include <windows.h> // For OutputDebugStringW
+diff -urN b/src/common/logging/formatter.h a/src/common/logging/formatter.h
+--- b/src/common/logging/formatter.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/common/logging/formatter.h	2025-03-31 16:08:01.262706800 -0400
+@@ -5,7 +5,7 @@
+ 
+ #include <type_traits>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ // adapted from https://github.com/fmtlib/fmt/issues/2704
+ // a generic formatter for enum classes
+@@ -14,7 +14,7 @@
+ struct fmt::formatter<T, std::enable_if_t<std::is_enum_v<T>, char>>
+     : formatter<std::underlying_type_t<T>> {
+     template <typename FormatContext>
+-    auto format(const T& value, FormatContext& ctx) -> decltype(ctx.out()) {
++    auto format(const T& value, FormatContext& ctx) const -> decltype(ctx.out()) {
+         return fmt::formatter<std::underlying_type_t<T>>::format(
+             static_cast<std::underlying_type_t<T>>(value), ctx);
+     }
+diff -urN b/src/common/logging/log.h a/src/common/logging/log.h
+--- b/src/common/logging/log.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/common/logging/log.h	2025-03-31 16:08:01.266707400 -0400
+@@ -6,7 +6,7 @@
+ #include <algorithm>
+ #include <string_view>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/logging/formatter.h"
+ #include "common/logging/types.h"
+diff -urN b/src/common/nvidia_flags.cpp a/src/common/nvidia_flags.cpp
+--- b/src/common/nvidia_flags.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/common/nvidia_flags.cpp	2025-03-31 16:08:01.270707400 -0400
+@@ -3,7 +3,7 @@
+ 
+ #include <cstdlib>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/fs/fs.h"
+ #include "common/fs/path_util.h"
+diff -urN b/src/common/typed_address.h a/src/common/typed_address.h
+--- b/src/common/typed_address.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/common/typed_address.h	2025-03-31 16:08:01.275704700 -0400
+@@ -5,7 +5,7 @@
+ 
+ #include <compare>
+ #include <type_traits>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/common_types.h"
+ 
+@@ -262,7 +262,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Common::PhysicalAddress& addr, FormatContext& ctx) {
++    auto format(const Common::PhysicalAddress& addr, FormatContext& ctx) const {
+         return fmt::format_to(ctx.out(), "{:#x}", static_cast<u64>(addr.GetValue()));
+     }
+ };
+@@ -273,7 +273,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Common::ProcessAddress& addr, FormatContext& ctx) {
++    auto format(const Common::ProcessAddress& addr, FormatContext& ctx) const {
+         return fmt::format_to(ctx.out(), "{:#x}", static_cast<u64>(addr.GetValue()));
+     }
+ };
+@@ -284,7 +284,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Common::VirtualAddress& addr, FormatContext& ctx) {
++    auto format(const Common::VirtualAddress& addr, FormatContext& ctx) const {
+         return fmt::format_to(ctx.out(), "{:#x}", static_cast<u64>(addr.GetValue()));
+     }
+ };
+diff -urN b/src/common/uuid.cpp a/src/common/uuid.cpp
+--- b/src/common/uuid.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/common/uuid.cpp	2025-03-31 16:08:01.280814200 -0400
+@@ -5,7 +5,7 @@
+ #include <optional>
+ #include <random>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/assert.h"
+ #include "common/tiny_mt.h"
+diff -urN b/src/core/arm/dynarmic/dynarmic_cp15.cpp a/src/core/arm/dynarmic/dynarmic_cp15.cpp
+--- b/src/core/arm/dynarmic/dynarmic_cp15.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/core/arm/dynarmic/dynarmic_cp15.cpp	2025-03-31 16:08:01.286837900 -0400
+@@ -1,7 +1,7 @@
+ // SPDX-FileCopyrightText: 2017 Citra Emulator Project
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "common/logging/log.h"
+ #include "core/arm/dynarmic/arm_dynarmic_32.h"
+ #include "core/arm/dynarmic/dynarmic_cp15.h"
+@@ -22,7 +22,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Dynarmic::A32::CoprocReg& reg, FormatContext& ctx) {
++    auto format(const Dynarmic::A32::CoprocReg& reg, FormatContext& ctx) const {
+         return fmt::format_to(ctx.out(), "cp{}", static_cast<size_t>(reg));
+     }
+ };
+diff -urN b/src/core/crypto/key_manager.h a/src/core/crypto/key_manager.h
+--- b/src/core/crypto/key_manager.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/core/crypto/key_manager.h	2025-03-31 16:08:01.293258700 -0400
+@@ -11,7 +11,7 @@
+ #include <string>
+ 
+ #include <variant>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "common/common_funcs.h"
+ #include "common/common_types.h"
+ #include "core/crypto/partition_data_manager.h"
+diff -urN b/src/core/debugger/gdbstub.cpp a/src/core/debugger/gdbstub.cpp
+--- b/src/core/debugger/gdbstub.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/core/debugger/gdbstub.cpp	2025-03-31 16:08:01.298771500 -0400
+@@ -9,6 +9,7 @@
+ #include <thread>
+ 
+ #include <boost/algorithm/string.hpp>
++#include <fmt/ranges.h>
+ 
+ #include "common/hex_util.h"
+ #include "common/logging/log.h"
+diff -urN b/src/core/file_sys/bis_factory.cpp a/src/core/file_sys/bis_factory.cpp
+--- b/src/core/file_sys/bis_factory.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/core/file_sys/bis_factory.cpp	2025-03-31 16:08:01.303775800 -0400
+@@ -1,7 +1,7 @@
+ // SPDX-FileCopyrightText: Copyright 2018 yuzu Emulator Project
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "common/fs/path_util.h"
+ #include "core/file_sys/bis_factory.h"
+ #include "core/file_sys/registered_cache.h"
+diff -urN b/src/core/file_sys/fs_save_data_types.h a/src/core/file_sys/fs_save_data_types.h
+--- b/src/core/file_sys/fs_save_data_types.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/core/file_sys/fs_save_data_types.h	2025-03-31 16:08:01.307790700 -0400
+@@ -4,7 +4,7 @@
+ #pragma once
+ 
+ #include <array>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "common/common_funcs.h"
+ #include "common/common_types.h"
+ 
+diff -urN b/src/core/file_sys/system_archive/ng_word.cpp a/src/core/file_sys/system_archive/ng_word.cpp
+--- b/src/core/file_sys/system_archive/ng_word.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/core/file_sys/system_archive/ng_word.cpp	2025-03-31 16:08:01.312777800 -0400
+@@ -1,7 +1,7 @@
+ // SPDX-FileCopyrightText: Copyright 2018 yuzu Emulator Project
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "common/common_types.h"
+ #include "core/file_sys/system_archive/ng_word.h"
+ #include "core/file_sys/vfs/vfs_vector.h"
+diff -urN b/src/core/hle/service/acc/profile_manager.cpp a/src/core/hle/service/acc/profile_manager.cpp
+--- b/src/core/hle/service/acc/profile_manager.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/core/hle/service/acc/profile_manager.cpp	2025-03-31 16:08:01.320778300 -0400
+@@ -4,7 +4,7 @@
+ #include <cstring>
+ #include <random>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/fs/file.h"
+ #include "common/fs/fs.h"
+diff -urN b/src/core/hle/service/ldn/ldn_types.h a/src/core/hle/service/ldn/ldn_types.h
+--- b/src/core/hle/service/ldn/ldn_types.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/core/hle/service/ldn/ldn_types.h	2025-03-31 16:08:01.325778600 -0400
+@@ -3,7 +3,7 @@
+ 
+ #pragma once
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/common_funcs.h"
+ #include "common/common_types.h"
+diff -urN b/src/core/hle/service/nfc/common/device.cpp a/src/core/hle/service/nfc/common/device.cpp
+--- b/src/core/hle/service/nfc/common/device.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/core/hle/service/nfc/common/device.cpp	2025-03-31 16:08:01.332783000 -0400
+@@ -14,7 +14,7 @@
+ #pragma warning(pop)
+ #endif
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/fs/file.h"
+ #include "common/fs/fs.h"
+diff -urN b/src/core/hle/service/nvdrv/devices/nvhost_ctrl.cpp a/src/core/hle/service/nvdrv/devices/nvhost_ctrl.cpp
+--- b/src/core/hle/service/nvdrv/devices/nvhost_ctrl.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/core/hle/service/nvdrv/devices/nvhost_ctrl.cpp	2025-03-31 16:08:01.339778900 -0400
+@@ -6,7 +6,7 @@
+ #include <cstdlib>
+ #include <cstring>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "common/assert.h"
+ #include "common/logging/log.h"
+ #include "common/scope_exit.h"
+diff -urN b/src/core/hle/service/nvdrv/nvdrv.cpp a/src/core/hle/service/nvdrv/nvdrv.cpp
+--- b/src/core/hle/service/nvdrv/nvdrv.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/core/hle/service/nvdrv/nvdrv.cpp	2025-03-31 16:08:01.344775600 -0400
+@@ -4,7 +4,7 @@
+ 
+ #include <utility>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "core/core.h"
+ #include "core/hle/kernel/k_event.h"
+ #include "core/hle/service/ipc_helpers.h"
+diff -urN b/src/core/hle/service/psc/time/common.h a/src/core/hle/service/psc/time/common.h
+--- b/src/core/hle/service/psc/time/common.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/core/hle/service/psc/time/common.h	2025-03-31 16:08:01.350778300 -0400
+@@ -5,7 +5,7 @@
+ 
+ #include <array>
+ #include <chrono>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/common_types.h"
+ #include "common/intrusive_list.h"
+@@ -167,7 +167,7 @@
+ template <>
+ struct fmt::formatter<Service::PSC::Time::TimeType> : fmt::formatter<fmt::string_view> {
+     template <typename FormatContext>
+-    auto format(Service::PSC::Time::TimeType type, FormatContext& ctx) {
++    auto format(Service::PSC::Time::TimeType type, FormatContext& ctx) const {
+         const string_view name = [type] {
+             using Service::PSC::Time::TimeType;
+             switch (type) {
+@@ -180,7 +180,7 @@
+             }
+             return "Invalid";
+         }();
+-        return formatter<string_view>::format(name, ctx);
++        return fmt::formatter<string_view>::format(name, ctx);
+     }
+ };
+ 
+@@ -228,7 +228,7 @@
+ struct fmt::formatter<Service::PSC::Time::LocationName> : fmt::formatter<fmt::string_view> {
+     template <typename FormatContext>
+     auto format(const Service::PSC::Time::LocationName& name, FormatContext& ctx) const {
+-        return formatter<string_view>::format(name.data(), ctx);
++        return fmt::formatter<string_view>::format(name.data(), ctx);
+     }
+ };
+ 
+@@ -236,7 +236,7 @@
+ struct fmt::formatter<Service::PSC::Time::RuleVersion> : fmt::formatter<fmt::string_view> {
+     template <typename FormatContext>
+     auto format(const Service::PSC::Time::RuleVersion& version, FormatContext& ctx) const {
+-        return formatter<string_view>::format(version.data(), ctx);
++        return fmt::formatter<string_view>::format(version.data(), ctx);
+     }
+ };
+ 
+diff -urN b/src/core/hle/service/service.cpp a/src/core/hle/service/service.cpp
+--- b/src/core/hle/service/service.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/core/hle/service/service.cpp	2025-03-31 16:08:01.355794400 -0400
+@@ -1,7 +1,7 @@
+ // SPDX-FileCopyrightText: Copyright 2018 yuzu Emulator Project
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "common/assert.h"
+ #include "common/logging/log.h"
+ #include "common/settings.h"
+diff -urN b/src/core/hle/service/sockets/bsd.cpp a/src/core/hle/service/sockets/bsd.cpp
+--- b/src/core/hle/service/sockets/bsd.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/core/hle/service/sockets/bsd.cpp	2025-03-31 16:08:01.361777500 -0400
+@@ -6,7 +6,7 @@
+ #include <utility>
+ #include <vector>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/microprofile.h"
+ #include "common/socket_types.h"
+diff -urN b/src/core/perf_stats.cpp a/src/core/perf_stats.cpp
+--- b/src/core/perf_stats.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/core/perf_stats.cpp	2025-03-31 16:08:01.366276700 -0400
+@@ -9,7 +9,7 @@
+ #include <sstream>
+ #include <thread>
+ #include <fmt/chrono.h>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "common/fs/file.h"
+ #include "common/fs/fs.h"
+ #include "common/fs/path_util.h"
+diff -urN b/src/core/reporter.cpp a/src/core/reporter.cpp
+--- b/src/core/reporter.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/core/reporter.cpp	2025-03-31 16:08:01.371421600 -0400
+@@ -6,7 +6,7 @@
+ #include <iomanip>
+ 
+ #include <fmt/chrono.h>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include <nlohmann/json.hpp>
+ 
+ #include "common/fs/file.h"
+diff -urN b/src/hid_core/frontend/emulated_devices.cpp a/src/hid_core/frontend/emulated_devices.cpp
+--- b/src/hid_core/frontend/emulated_devices.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/hid_core/frontend/emulated_devices.cpp	2025-03-31 16:08:01.377432200 -0400
+@@ -2,7 +2,7 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+ #include <algorithm>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "hid_core/frontend/emulated_devices.h"
+ #include "hid_core/frontend/input_converter.h"
+diff -urN b/src/input_common/drivers/camera.cpp a/src/input_common/drivers/camera.cpp
+--- b/src/input_common/drivers/camera.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/input_common/drivers/camera.cpp	2025-03-31 16:08:01.384436500 -0400
+@@ -1,7 +1,7 @@
+ // SPDX-FileCopyrightText: Copyright 2021 yuzu Emulator Project
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/param_package.h"
+ #include "input_common/drivers/camera.h"
+diff -urN b/src/input_common/drivers/gc_adapter.cpp a/src/input_common/drivers/gc_adapter.cpp
+--- b/src/input_common/drivers/gc_adapter.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/input_common/drivers/gc_adapter.cpp	2025-03-31 16:08:01.389645100 -0400
+@@ -1,7 +1,7 @@
+ // SPDX-FileCopyrightText: 2014 Dolphin Emulator Project
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include <libusb.h>
+ 
+ #include "common/logging/log.h"
+diff -urN b/src/input_common/drivers/joycon.cpp a/src/input_common/drivers/joycon.cpp
+--- b/src/input_common/drivers/joycon.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/input_common/drivers/joycon.cpp	2025-03-31 16:08:01.394631300 -0400
+@@ -1,7 +1,7 @@
+ // SPDX-FileCopyrightText: Copyright 2022 yuzu Emulator Project
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/param_package.h"
+ #include "common/polyfill_ranges.h"
+diff -urN b/src/input_common/drivers/mouse.cpp a/src/input_common/drivers/mouse.cpp
+--- b/src/input_common/drivers/mouse.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/input_common/drivers/mouse.cpp	2025-03-31 16:08:01.399156600 -0400
+@@ -2,7 +2,7 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+ #include <thread>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include <math.h>
+ 
+ #include "common/param_package.h"
+diff -urN b/src/input_common/drivers/tas_input.cpp a/src/input_common/drivers/tas_input.cpp
+--- b/src/input_common/drivers/tas_input.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/input_common/drivers/tas_input.cpp	2025-03-31 16:08:01.404169900 -0400
+@@ -3,7 +3,7 @@
+ 
+ #include <cstring>
+ #include <sstream>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/fs/file.h"
+ #include "common/fs/fs_types.h"
+diff -urN b/src/input_common/drivers/udp_client.cpp a/src/input_common/drivers/udp_client.cpp
+--- b/src/input_common/drivers/udp_client.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/input_common/drivers/udp_client.cpp	2025-03-31 16:08:01.409166100 -0400
+@@ -3,7 +3,7 @@
+ 
+ #include <random>
+ #include <boost/asio.hpp>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/logging/log.h"
+ #include "common/param_package.h"
+diff -urN b/src/input_common/drivers/virtual_amiibo.cpp a/src/input_common/drivers/virtual_amiibo.cpp
+--- b/src/input_common/drivers/virtual_amiibo.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/input_common/drivers/virtual_amiibo.cpp	2025-03-31 16:08:01.414170300 -0400
+@@ -2,7 +2,7 @@
+ // SPDX-License-Identifier: GPL-3.0-or-later
+ 
+ #include <cstring>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/fs/file.h"
+ #include "common/fs/fs.h"
+diff -urN b/src/shader_recompiler/backend/glasm/glasm_emit_context.h a/src/shader_recompiler/backend/glasm/glasm_emit_context.h
+--- b/src/shader_recompiler/backend/glasm/glasm_emit_context.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/backend/glasm/glasm_emit_context.h	2025-03-31 16:08:01.420669100 -0400
+@@ -7,7 +7,7 @@
+ #include <utility>
+ #include <vector>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "shader_recompiler/backend/glasm/reg_alloc.h"
+ #include "shader_recompiler/stage.h"
+diff -urN b/src/shader_recompiler/backend/glasm/reg_alloc.cpp a/src/shader_recompiler/backend/glasm/reg_alloc.cpp
+--- b/src/shader_recompiler/backend/glasm/reg_alloc.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/backend/glasm/reg_alloc.cpp	2025-03-31 16:08:01.425633100 -0400
+@@ -1,7 +1,7 @@
+ // SPDX-FileCopyrightText: Copyright 2021 yuzu Emulator Project
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "shader_recompiler/backend/glasm/reg_alloc.h"
+ #include "shader_recompiler/exception.h"
+diff -urN b/src/shader_recompiler/backend/glasm/reg_alloc.h a/src/shader_recompiler/backend/glasm/reg_alloc.h
+--- b/src/shader_recompiler/backend/glasm/reg_alloc.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/backend/glasm/reg_alloc.h	2025-03-31 16:08:01.430640200 -0400
+@@ -5,7 +5,7 @@
+ 
+ #include <bitset>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/bit_cast.h"
+ #include "common/bit_field.h"
+@@ -184,7 +184,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(Shader::Backend::GLASM::Id id, FormatContext& ctx) {
++    auto format(Shader::Backend::GLASM::Id id, FormatContext& ctx) const {
+         return Shader::Backend::GLASM::FormatTo<true>(ctx, id);
+     }
+ };
+@@ -195,7 +195,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::Backend::GLASM::Register& value, FormatContext& ctx) {
++    auto format(const Shader::Backend::GLASM::Register& value, FormatContext& ctx) const {
+         if (value.type != Shader::Backend::GLASM::Type::Register) {
+             throw Shader::InvalidArgument("Register value type is not register");
+         }
+@@ -209,7 +209,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::Backend::GLASM::ScalarRegister& value, FormatContext& ctx) {
++    auto format(const Shader::Backend::GLASM::ScalarRegister& value, FormatContext& ctx) const {
+         if (value.type != Shader::Backend::GLASM::Type::Register) {
+             throw Shader::InvalidArgument("Register value type is not register");
+         }
+@@ -223,7 +223,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::Backend::GLASM::ScalarU32& value, FormatContext& ctx) {
++    auto format(const Shader::Backend::GLASM::ScalarU32& value, FormatContext& ctx) const {
+         switch (value.type) {
+         case Shader::Backend::GLASM::Type::Void:
+             break;
+@@ -244,7 +244,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::Backend::GLASM::ScalarS32& value, FormatContext& ctx) {
++    auto format(const Shader::Backend::GLASM::ScalarS32& value, FormatContext& ctx) const {
+         switch (value.type) {
+         case Shader::Backend::GLASM::Type::Void:
+             break;
+@@ -265,7 +265,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::Backend::GLASM::ScalarF32& value, FormatContext& ctx) {
++    auto format(const Shader::Backend::GLASM::ScalarF32& value, FormatContext& ctx) const {
+         switch (value.type) {
+         case Shader::Backend::GLASM::Type::Void:
+             break;
+@@ -286,7 +286,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::Backend::GLASM::ScalarF64& value, FormatContext& ctx) {
++    auto format(const Shader::Backend::GLASM::ScalarF64& value, FormatContext& ctx) const {
+         switch (value.type) {
+         case Shader::Backend::GLASM::Type::Void:
+             break;
+diff -urN b/src/shader_recompiler/backend/glsl/glsl_emit_context.h a/src/shader_recompiler/backend/glsl/glsl_emit_context.h
+--- b/src/shader_recompiler/backend/glsl/glsl_emit_context.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/backend/glsl/glsl_emit_context.h	2025-03-31 16:08:01.441669400 -0400
+@@ -7,7 +7,7 @@
+ #include <utility>
+ #include <vector>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "shader_recompiler/backend/glsl/var_alloc.h"
+ #include "shader_recompiler/stage.h"
+diff -urN b/src/shader_recompiler/backend/glsl/var_alloc.cpp a/src/shader_recompiler/backend/glsl/var_alloc.cpp
+--- b/src/shader_recompiler/backend/glsl/var_alloc.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/backend/glsl/var_alloc.cpp	2025-03-31 16:08:01.447671200 -0400
+@@ -4,7 +4,7 @@
+ #include <string>
+ #include <string_view>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "shader_recompiler/backend/glsl/var_alloc.h"
+ #include "shader_recompiler/exception.h"
+diff -urN b/src/shader_recompiler/backend/spirv/spirv_emit_context.cpp a/src/shader_recompiler/backend/spirv/spirv_emit_context.cpp
+--- b/src/shader_recompiler/backend/spirv/spirv_emit_context.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/backend/spirv/spirv_emit_context.cpp	2025-03-31 16:08:01.457809300 -0400
+@@ -8,7 +8,7 @@
+ 
+ #include <boost/container/static_vector.hpp>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/common_types.h"
+ #include "common/div_ceil.h"
+diff -urN b/src/shader_recompiler/frontend/ir/attribute.cpp a/src/shader_recompiler/frontend/ir/attribute.cpp
+--- b/src/shader_recompiler/frontend/ir/attribute.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/frontend/ir/attribute.cpp	2025-03-31 16:08:01.466646600 -0400
+@@ -1,7 +1,7 @@
+ // SPDX-FileCopyrightText: Copyright 2021 yuzu Emulator Project
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "shader_recompiler/exception.h"
+ #include "shader_recompiler/frontend/ir/attribute.h"
+diff -urN b/src/shader_recompiler/frontend/ir/attribute.h a/src/shader_recompiler/frontend/ir/attribute.h
+--- b/src/shader_recompiler/frontend/ir/attribute.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/frontend/ir/attribute.h	2025-03-31 16:08:01.472859900 -0400
+@@ -3,7 +3,7 @@
+ 
+ #pragma once
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/common_types.h"
+ 
+@@ -250,7 +250,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::IR::Attribute& attribute, FormatContext& ctx) {
++    auto format(const Shader::IR::Attribute& attribute, FormatContext& ctx) const {
+         return fmt::format_to(ctx.out(), "{}", Shader::IR::NameOf(attribute));
+     }
+ };
+diff -urN b/src/shader_recompiler/frontend/ir/condition.cpp a/src/shader_recompiler/frontend/ir/condition.cpp
+--- b/src/shader_recompiler/frontend/ir/condition.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/frontend/ir/condition.cpp	2025-03-31 16:08:01.476953300 -0400
+@@ -3,7 +3,7 @@
+ 
+ #include <string>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "shader_recompiler/frontend/ir/condition.h"
+ 
+diff -urN b/src/shader_recompiler/frontend/ir/condition.h a/src/shader_recompiler/frontend/ir/condition.h
+--- b/src/shader_recompiler/frontend/ir/condition.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/frontend/ir/condition.h	2025-03-31 16:08:01.482940600 -0400
+@@ -5,7 +5,7 @@
+ 
+ #include <string>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/common_types.h"
+ #include "shader_recompiler/frontend/ir/flow_test.h"
+@@ -52,7 +52,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::IR::Condition& cond, FormatContext& ctx) {
++    auto format(const Shader::IR::Condition& cond, FormatContext& ctx) const {
+         return fmt::format_to(ctx.out(), "{}", Shader::IR::NameOf(cond));
+     }
+ };
+diff -urN b/src/shader_recompiler/frontend/ir/flow_test.cpp a/src/shader_recompiler/frontend/ir/flow_test.cpp
+--- b/src/shader_recompiler/frontend/ir/flow_test.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/frontend/ir/flow_test.cpp	2025-03-31 16:08:01.485960200 -0400
+@@ -3,7 +3,7 @@
+ 
+ #include <string>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "shader_recompiler/frontend/ir/flow_test.h"
+ 
+diff -urN b/src/shader_recompiler/frontend/ir/flow_test.h a/src/shader_recompiler/frontend/ir/flow_test.h
+--- b/src/shader_recompiler/frontend/ir/flow_test.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/frontend/ir/flow_test.h	2025-03-31 16:08:01.489961600 -0400
+@@ -4,7 +4,7 @@
+ #pragma once
+ 
+ #include <string>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/common_types.h"
+ 
+@@ -55,7 +55,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::IR::FlowTest& flow_test, FormatContext& ctx) {
++    auto format(const Shader::IR::FlowTest& flow_test, FormatContext& ctx) const {
+         return fmt::format_to(ctx.out(), "{}", Shader::IR::NameOf(flow_test));
+     }
+ };
+diff -urN b/src/shader_recompiler/frontend/ir/opcodes.h a/src/shader_recompiler/frontend/ir/opcodes.h
+--- b/src/shader_recompiler/frontend/ir/opcodes.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/frontend/ir/opcodes.h	2025-03-31 16:08:01.493946300 -0400
+@@ -6,7 +6,7 @@
+ #include <algorithm>
+ #include <array>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/polyfill_ranges.h"
+ #include "shader_recompiler/frontend/ir/type.h"
+@@ -54,7 +54,7 @@
+ constexpr Type F64x3{Type::F64x3};
+ constexpr Type F64x4{Type::F64x4};
+ 
+-constexpr OpcodeMeta META_TABLE[]{
++constexpr OpcodeMeta META_TABLE[] {
+ #define OPCODE(name_token, type_token, ...)                                                        \
+     {                                                                                              \
+         .name{#name_token},                                                                        \
+@@ -103,7 +103,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::IR::Opcode& op, FormatContext& ctx) {
++    auto format(const Shader::IR::Opcode& op, FormatContext& ctx) const {
+         return fmt::format_to(ctx.out(), "{}", Shader::IR::NameOf(op));
+     }
+ };
+diff -urN b/src/shader_recompiler/frontend/ir/pred.h a/src/shader_recompiler/frontend/ir/pred.h
+--- b/src/shader_recompiler/frontend/ir/pred.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/frontend/ir/pred.h	2025-03-31 16:08:01.498948400 -0400
+@@ -3,7 +3,7 @@
+ 
+ #pragma once
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ namespace Shader::IR {
+ 
+@@ -33,7 +33,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::IR::Pred& pred, FormatContext& ctx) {
++    auto format(const Shader::IR::Pred& pred, FormatContext& ctx) const {
+         if (pred == Shader::IR::Pred::PT) {
+             return fmt::format_to(ctx.out(), "PT");
+         } else {
+diff -urN b/src/shader_recompiler/frontend/ir/program.cpp a/src/shader_recompiler/frontend/ir/program.cpp
+--- b/src/shader_recompiler/frontend/ir/program.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/frontend/ir/program.cpp	2025-03-31 16:08:01.503458600 -0400
+@@ -4,7 +4,7 @@
+ #include <map>
+ #include <string>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "shader_recompiler/frontend/ir/basic_block.h"
+ #include "shader_recompiler/frontend/ir/program.h"
+diff -urN b/src/shader_recompiler/frontend/ir/reg.h a/src/shader_recompiler/frontend/ir/reg.h
+--- b/src/shader_recompiler/frontend/ir/reg.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/frontend/ir/reg.h	2025-03-31 16:08:01.507460900 -0400
+@@ -3,7 +3,7 @@
+ 
+ #pragma once
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/common_types.h"
+ #include "shader_recompiler/exception.h"
+@@ -319,7 +319,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::IR::Reg& reg, FormatContext& ctx) {
++    auto format(const Shader::IR::Reg& reg, FormatContext& ctx) const {
+         if (reg == Shader::IR::Reg::RZ) {
+             return fmt::format_to(ctx.out(), "RZ");
+         } else if (static_cast<int>(reg) >= 0 && static_cast<int>(reg) < 255) {
+diff -urN b/src/shader_recompiler/frontend/ir/type.h a/src/shader_recompiler/frontend/ir/type.h
+--- b/src/shader_recompiler/frontend/ir/type.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/frontend/ir/type.h	2025-03-31 16:08:01.511459400 -0400
+@@ -5,7 +5,7 @@
+ 
+ #include <string>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/common_funcs.h"
+ #include "shader_recompiler/exception.h"
+@@ -54,7 +54,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::IR::Type& type, FormatContext& ctx) {
++    auto format(const Shader::IR::Type& type, FormatContext& ctx) const {
+         return fmt::format_to(ctx.out(), "{}", NameOf(type));
+     }
+ };
+diff -urN b/src/shader_recompiler/frontend/maxwell/control_flow.cpp a/src/shader_recompiler/frontend/maxwell/control_flow.cpp
+--- b/src/shader_recompiler/frontend/maxwell/control_flow.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/frontend/maxwell/control_flow.cpp	2025-03-31 16:08:01.517464100 -0400
+@@ -7,7 +7,7 @@
+ #include <string>
+ #include <utility>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/polyfill_ranges.h"
+ #include "shader_recompiler/exception.h"
+diff -urN b/src/shader_recompiler/frontend/maxwell/location.h a/src/shader_recompiler/frontend/maxwell/location.h
+--- b/src/shader_recompiler/frontend/maxwell/location.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/frontend/maxwell/location.h	2025-03-31 16:08:01.521472000 -0400
+@@ -3,7 +3,7 @@
+ 
+ #pragma once
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/common_types.h"
+ #include "shader_recompiler/exception.h"
+@@ -102,7 +102,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::Maxwell::Location& location, FormatContext& ctx) {
++    auto format(const Shader::Maxwell::Location& location, FormatContext& ctx) const {
+         return fmt::format_to(ctx.out(), "{:04x}", location.Offset());
+     }
+ };
+diff -urN b/src/shader_recompiler/frontend/maxwell/opcodes.h a/src/shader_recompiler/frontend/maxwell/opcodes.h
+--- b/src/shader_recompiler/frontend/maxwell/opcodes.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/frontend/maxwell/opcodes.h	2025-03-31 16:08:01.526460800 -0400
+@@ -3,7 +3,7 @@
+ 
+ #pragma once
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ namespace Shader::Maxwell {
+ 
+@@ -23,7 +23,7 @@
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::Maxwell::Opcode& opcode, FormatContext& ctx) {
++    auto format(const Shader::Maxwell::Opcode& opcode, FormatContext& ctx) const {
+         return fmt::format_to(ctx.out(), "{}", NameOf(opcode));
+     }
+ };
+diff -urN b/src/shader_recompiler/frontend/maxwell/structured_control_flow.cpp a/src/shader_recompiler/frontend/maxwell/structured_control_flow.cpp
+--- b/src/shader_recompiler/frontend/maxwell/structured_control_flow.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/shader_recompiler/frontend/maxwell/structured_control_flow.cpp	2025-03-31 16:08:01.532472800 -0400
+@@ -8,7 +8,7 @@
+ #include <utility>
+ #include <vector>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include <boost/intrusive/list.hpp>
+ 
+diff -urN b/src/sudachi/about_dialog.cpp a/src/sudachi/about_dialog.cpp
+--- b/src/sudachi/about_dialog.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/sudachi/about_dialog.cpp	2025-03-31 16:08:01.167486800 -0400
+@@ -2,7 +2,7 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+ #include <QIcon>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "common/scm_rev.h"
+ #include "ui_aboutdialog.h"
+ #include "sudachi/about_dialog.h"
+diff -urN b/src/sudachi/applets/qt_amiibo_settings.cpp a/src/sudachi/applets/qt_amiibo_settings.cpp
+--- b/src/sudachi/applets/qt_amiibo_settings.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/sudachi/applets/qt_amiibo_settings.cpp	2025-03-31 16:08:01.173519200 -0400
+@@ -3,7 +3,7 @@
+ 
+ #include <algorithm>
+ #include <thread>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include <nlohmann/json.hpp>
+ 
+ #include "common/assert.h"
+diff -urN b/src/sudachi/compatibility_list.cpp a/src/sudachi/compatibility_list.cpp
+--- b/src/sudachi/compatibility_list.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/sudachi/compatibility_list.cpp	2025-03-31 16:08:01.177808300 -0400
+@@ -3,7 +3,7 @@
+ 
+ #include <algorithm>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "sudachi/compatibility_list.h"
+ 
+diff -urN b/src/sudachi/configuration/configure_per_game.cpp a/src/sudachi/configuration/configure_per_game.cpp
+--- b/src/sudachi/configuration/configure_per_game.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/sudachi/configuration/configure_per_game.cpp	2025-03-31 16:08:01.183234900 -0400
+@@ -8,7 +8,7 @@
+ #include <utility>
+ #include <vector>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include <QAbstractButton>
+ #include <QCheckBox>
+diff -urN b/src/sudachi/configuration/configure_ringcon.cpp a/src/sudachi/configuration/configure_ringcon.cpp
+--- b/src/sudachi/configuration/configure_ringcon.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/sudachi/configuration/configure_ringcon.cpp	2025-03-31 16:08:01.188638400 -0400
+@@ -6,7 +6,7 @@
+ #include <QMenu>
+ #include <QMessageBox>
+ #include <QTimer>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "configuration/qt_config.h"
+ #include "hid_core/frontend/emulated_controller.h"
+diff -urN b/src/sudachi/configuration/input_profiles.cpp a/src/sudachi/configuration/input_profiles.cpp
+--- b/src/sudachi/configuration/input_profiles.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/sudachi/configuration/input_profiles.cpp	2025-03-31 16:08:01.192626500 -0400
+@@ -1,7 +1,7 @@
+ // SPDX-FileCopyrightText: Copyright 2020 yuzu Emulator Project
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/fs/fs.h"
+ #include "common/fs/path_util.h"
+diff -urN b/src/sudachi/debugger/wait_tree.cpp a/src/sudachi/debugger/wait_tree.cpp
+--- b/src/sudachi/debugger/wait_tree.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/sudachi/debugger/wait_tree.cpp	2025-03-31 16:08:01.198470200 -0400
+@@ -2,7 +2,7 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+ #include <array>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "sudachi/debugger/wait_tree.h"
+ #include "sudachi/uisettings.h"
+diff -urN b/src/sudachi/discord_impl.cpp a/src/sudachi/discord_impl.cpp
+--- b/src/sudachi/discord_impl.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/sudachi/discord_impl.cpp	2025-03-31 16:17:48.206689200 -0400
+@@ -9,7 +9,7 @@
+ #include <QNetworkReply>
+ 
+ #include <discord_rpc.h>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/common_types.h"
+ #include "common/string_util.h"
+diff -urN b/src/sudachi/game_list.cpp a/src/sudachi/game_list.cpp
+--- b/src/sudachi/game_list.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/sudachi/game_list.cpp	2025-03-31 16:08:01.213397000 -0400
+@@ -13,7 +13,7 @@
+ #include <QMenu>
+ #include <QThreadPool>
+ #include <QToolButton>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "common/common_types.h"
+ #include "common/logging/log.h"
+ #include "core/core.h"
+diff -urN b/src/sudachi/main.cpp a/src/sudachi/main.cpp
+--- b/src/sudachi/main.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/sudachi/main.cpp	2025-03-31 16:08:01.225366800 -0400
+@@ -93,7 +93,7 @@
+ #include <SDL3/SDL.h> // For SDL ScreenSaver functions
+ #endif
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "common/detached_tasks.h"
+ #include "common/fs/fs.h"
+ #include "common/fs/path_util.h"
+diff -urN b/src/sudachi_cmd/emu_window/emu_window_sdl3_gl.cpp a/src/sudachi_cmd/emu_window/emu_window_sdl3_gl.cpp
+--- b/src/sudachi_cmd/emu_window/emu_window_sdl3_gl.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/sudachi_cmd/emu_window/emu_window_sdl3_gl.cpp	2025-03-31 16:08:01.231536800 -0400
+@@ -8,7 +8,7 @@
+ #define SDL_MAIN_HANDLED
+ #include <SDL3/SDL.h>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include <glad/glad.h>
+ #include "common/logging/log.h"
+ #include "common/scm_rev.h"
+diff -urN b/src/sudachi_cmd/emu_window/emu_window_sdl3_null.cpp a/src/sudachi_cmd/emu_window/emu_window_sdl3_null.cpp
+--- b/src/sudachi_cmd/emu_window/emu_window_sdl3_null.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/sudachi_cmd/emu_window/emu_window_sdl3_null.cpp	2025-03-31 16:08:01.235536800 -0400
+@@ -5,7 +5,7 @@
+ #include <memory>
+ #include <string>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/logging/log.h"
+ #include "common/scm_rev.h"
+diff -urN b/src/sudachi_cmd/emu_window/emu_window_sdl3_vk.cpp a/src/sudachi_cmd/emu_window/emu_window_sdl3_vk.cpp
+--- b/src/sudachi_cmd/emu_window/emu_window_sdl3_vk.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/sudachi_cmd/emu_window/emu_window_sdl3_vk.cpp	2025-03-31 16:08:01.239539300 -0400
+@@ -5,7 +5,7 @@
+ #include <memory>
+ #include <string>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/logging/log.h"
+ #include "common/scm_rev.h"
+diff -urN b/src/video_core/renderer_vulkan/pipeline_statistics.cpp a/src/video_core/renderer_vulkan/pipeline_statistics.cpp
+--- b/src/video_core/renderer_vulkan/pipeline_statistics.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/video_core/renderer_vulkan/pipeline_statistics.cpp	2025-03-31 16:08:01.537460300 -0400
+@@ -3,7 +3,7 @@
+ 
+ #include <string_view>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/common_types.h"
+ #include "common/logging/log.h"
+diff -urN b/src/video_core/renderer_vulkan/renderer_vulkan.cpp a/src/video_core/renderer_vulkan/renderer_vulkan.cpp
+--- b/src/video_core/renderer_vulkan/renderer_vulkan.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/video_core/renderer_vulkan/renderer_vulkan.cpp	2025-03-31 16:08:01.541460200 -0400
+@@ -9,7 +9,7 @@
+ #include <string>
+ #include <vector>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/logging/log.h"
+ #include "common/polyfill_ranges.h"
+diff -urN b/src/video_core/renderer_vulkan/vk_staging_buffer_pool.cpp a/src/video_core/renderer_vulkan/vk_staging_buffer_pool.cpp
+--- b/src/video_core/renderer_vulkan/vk_staging_buffer_pool.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/video_core/renderer_vulkan/vk_staging_buffer_pool.cpp	2025-03-31 16:08:01.546608700 -0400
+@@ -5,7 +5,7 @@
+ #include <utility>
+ #include <vector>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/alignment.h"
+ #include "common/assert.h"
+diff -urN b/src/video_core/texture_cache/formatter.h a/src/video_core/texture_cache/formatter.h
+--- b/src/video_core/texture_cache/formatter.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/video_core/texture_cache/formatter.h	2025-03-31 16:08:01.552610100 -0400
+@@ -5,7 +5,7 @@
+ 
+ #include <string>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "video_core/surface.h"
+ #include "video_core/texture_cache/types.h"
+@@ -13,7 +13,7 @@
+ template <>
+ struct fmt::formatter<VideoCore::Surface::PixelFormat> : fmt::formatter<fmt::string_view> {
+     template <typename FormatContext>
+-    auto format(VideoCore::Surface::PixelFormat format, FormatContext& ctx) {
++    auto format(VideoCore::Surface::PixelFormat format, FormatContext& ctx) const {
+         using VideoCore::Surface::PixelFormat;
+         const string_view name = [format] {
+             switch (format) {
+@@ -227,14 +227,14 @@
+             }
+             return "Invalid";
+         }();
+-        return formatter<string_view>::format(name, ctx);
++        return fmt::formatter<string_view>::format(name, ctx);
+     }
+ };
+ 
+ template <>
+ struct fmt::formatter<VideoCommon::ImageType> : fmt::formatter<fmt::string_view> {
+     template <typename FormatContext>
+-    auto format(VideoCommon::ImageType type, FormatContext& ctx) {
++    auto format(VideoCommon::ImageType type, FormatContext& ctx) const {
+         const string_view name = [type] {
+             using VideoCommon::ImageType;
+             switch (type) {
+@@ -251,7 +251,7 @@
+             }
+             return "Invalid";
+         }();
+-        return formatter<string_view>::format(name, ctx);
++        return fmt::formatter<string_view>::format(name, ctx);
+     }
+ };
+ 
+@@ -262,7 +262,7 @@
+     }
+ 
+     template <typename FormatContext>
+-    auto format(const VideoCommon::Extent3D& extent, FormatContext& ctx) {
++    auto format(const VideoCommon::Extent3D& extent, FormatContext& ctx) const {
+         return fmt::format_to(ctx.out(), "{{{}, {}, {}}}", extent.width, extent.height,
+                               extent.depth);
+     }
+diff -urN b/src/video_core/texture_cache/image_info.cpp a/src/video_core/texture_cache/image_info.cpp
+--- b/src/video_core/texture_cache/image_info.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/video_core/texture_cache/image_info.cpp	2025-03-31 16:08:01.556607700 -0400
+@@ -1,7 +1,7 @@
+ // SPDX-FileCopyrightText: Copyright 2020 yuzu Emulator Project
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/assert.h"
+ #include "common/settings.h"
+diff -urN b/src/video_core/vulkan_common/nsight_aftermath_tracker.cpp a/src/video_core/vulkan_common/nsight_aftermath_tracker.cpp
+--- b/src/video_core/vulkan_common/nsight_aftermath_tracker.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/video_core/vulkan_common/nsight_aftermath_tracker.cpp	2025-03-31 16:08:01.561762200 -0400
+@@ -10,7 +10,7 @@
+ #include <utility>
+ #include <vector>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/common_types.h"
+ #include "common/fs/file.h"
+diff -urN b/src/web_service/verify_user_jwt.h a/src/web_service/verify_user_jwt.h
+--- b/src/web_service/verify_user_jwt.h	2025-03-25 06:52:41.000000000 -0400
++++ a/src/web_service/verify_user_jwt.h	2025-03-31 16:08:01.566762700 -0400
+@@ -3,7 +3,7 @@
+ 
+ #pragma once
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "network/verify_user.h"
+ #include "web_service/web_backend.h"
+ 
+diff -urN b/src/web_service/web_backend.cpp a/src/web_service/web_backend.cpp
+--- b/src/web_service/web_backend.cpp	2025-03-25 06:52:41.000000000 -0400
++++ a/src/web_service/web_backend.cpp	2025-03-31 16:08:01.570762800 -0400
+@@ -5,7 +5,7 @@
+ #include <mutex>
+ #include <string>
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #ifdef __GNUC__
+ #pragma GCC diagnostic push
+diff -urN b/vcpkg.json a/vcpkg.json
+--- b/vcpkg.json	2025-03-25 06:52:41.000000000 -0400
++++ a/vcpkg.json	2025-03-31 16:07:30.189442100 -0400
+@@ -57,11 +57,11 @@
+     "overrides": [
+         {
+             "name": "catch2",
+-            "version": "3.3.1"
++            "version": "3.8.0"
+         },
+         {
+             "name": "fmt",
+-            "version": "10.1.1"
++            "version": "11.0.2"
+         }
+     ]
