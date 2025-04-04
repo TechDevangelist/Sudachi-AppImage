@@ -51,13 +51,13 @@ sed -i -e 's/s\\c/s\/c/' sudachi/setup.sh
    	sed -i -e 's/FFmpeg 4.3 REQUIRED QUIET COMPONENTS/FFmpeg REQUIRED QUIET COMPONENTS/' CMakeLists.txt
     sed -i -e 's/SDL_GetWindowProperties(window)/SDL_GetWindowProperties(render_window)/g' src/sudachi_cmd/emu_window/emu_window_sdl3_vk.cpp
     #cd externals/xbyak && git checkout a1ac3750f9a639b5a6c6d6c7da4259b8d6790989 && cd ../..
-    sed -i -e 's/1318ab14aae14db20085441cd71366891a9c9d0c/c82f74667287d3dc386bce81e44964370c91a289/' vcpkg.json
+    #sed -i -e 's/1318ab14aae14db20085441cd71366891a9c9d0c/c82f74667287d3dc386bce81e44964370c91a289/' vcpkg.json
 
 	mkdir build
 	cd build
 	cmake .. -GNinja \
-		-DSUDACHI_USE_BUNDLED_VCPKG=ON \
-		-DSUDACHI_USE_BUNDLED_QT=ON \
+		-DSUDACHI_USE_BUNDLED_VCPKG=OFF \
+		-DSUDACHI_USE_BUNDLED_QT=OFF \
 		-DUSE_SYSTEM_QT=ON \
 		-DSUDACHI_USE_BUNDLED_FFMPEG=ON \
 		-DSUDACHI_USE_BUNDLED_SDL3=ON \
