@@ -23,6 +23,10 @@ jobs:
             optimized: true
             name: "Sudachi Build (Optimized)"
             arch: x86_64
+          - runs-on: ubuntu-latest
+            optimized: true
+            name: "Sudachi Build (Steam Deck)"
+            arch: x86_64
           #- runs-on: ubuntu-24.04-arm
           #  name: "Sudachi build (Normal)"
           #  optimized: false
