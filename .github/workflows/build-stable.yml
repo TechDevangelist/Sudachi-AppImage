@@ -9,11 +9,9 @@ on:
   workflow_dispatch:
     inputs:
       debug:
-        type: choice
+        type: boolean
         description: Debug enabled
-        options: 
-        - off
-        - on
+        default: false
 
 jobs:
   build:
@@ -62,7 +60,7 @@ jobs:
         run: |
           rm -rf ./AppDir || true
           sudo pacman -R --noconfirm sudachi || true
-          chmod +x ./sudachi-appimage.sh && ./sudachi-appimage.sh v3 ${{ fromJSON('["", "debug"]')[github.event.inputs.debug == 'on'] }}
+          chmod +x ./sudachi-appimage.sh && ./sudachi-appimage.sh v3 ${{ fromJSON('["", "debug"]')[github.event.inputs.debug == 'true'] }}
           mkdir -p dist
           mv *.AppImage* dist/
 
@@ -71,7 +69,7 @@ jobs:
         run: |
           rm -rf ./AppDir || true
           sudo pacman -R --noconfirm sudachi || true
-          chmod +x ./sudachi-appimage.sh && ./sudachi-appimage.sh steamdeck ${{ fromJSON('["", "debug"]')[github.event.inputs.debug == 'on'] }}
+          chmod +x ./sudachi-appimage.sh && ./sudachi-appimage.sh steamdeck ${{ fromJSON('["", "debug"]')[github.event.inputs.debug == 'true'] }}
           mkdir -p dist
           mv *.AppImage* dist/
 
