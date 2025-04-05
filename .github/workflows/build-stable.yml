@@ -21,10 +21,12 @@ jobs:
           #  arch: x86_64
           - runs-on: ubuntu-latest
             optimized: true
+            dist: v3
             name: "Sudachi Build (Optimized)"
             arch: x86_64
           - runs-on: ubuntu-latest
             optimized: true
+            dist: steamdeck
             name: "Sudachi Build (Steam Deck)"
             arch: x86_64
           #- runs-on: ubuntu-24.04-arm
@@ -69,7 +71,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4.6.1
         with:
-          name: sudachi-${{ matrix.optimized && 'optimized' || 'normal || steamdeck' }}-appimage-${{ matrix.arch }}
+          name: sudachi-${{ matrix.dist }}-appimage-${{ matrix.arch }}
           path: "dist"
 
       - name: Check version file
@@ -96,7 +98,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4.1.9
         with:
-          name: sudachi-optimized-appimage-x86_64
+          name: sudachi-v3-appimage-x86_64
 
       - uses: actions/download-artifact@v4.1.9
         with:
