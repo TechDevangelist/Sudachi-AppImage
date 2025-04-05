@@ -28,6 +28,10 @@ else
 	ARCH_FLAGS="-march=armv8-a -mtune=generic -O3"
 fi
 
+if [ "$2" = 'debug' ]; then
+	DEBUG="-DCMAKE_BUILD_TYPE=Debug \\"
+fi
+
 UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*$ARCH.AppImage.zsync"
 
 # BUILD SUDACHI
@@ -56,6 +60,7 @@ sed -i -e 's/s\\c/s\/c/' sudachi/setup.sh
 	mkdir build
 	cd build
 	cmake .. -GNinja \
+		$DEBUG
 		-DSUDACHI_USE_BUNDLED_VCPKG=OFF \
 		-DSUDACHI_USE_BUNDLED_QT=OFF \
 		-DUSE_SYSTEM_QT=ON \
