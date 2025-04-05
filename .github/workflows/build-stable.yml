@@ -6,7 +6,14 @@ concurrency:
 on:
   #schedule:
   #  - cron: "0 14 * * 0"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      debug:
+        type: choice
+        description: Debug enabled
+        options: 
+        - off
+        - on
 
 jobs:
   build:
@@ -55,7 +62,7 @@ jobs:
         run: |
           rm -rf ./AppDir || true
           sudo pacman -R --noconfirm sudachi || true
-          chmod +x ./sudachi-appimage.sh && ./sudachi-appimage.sh v3
+          chmod +x ./sudachi-appimage.sh && ./sudachi-appimage.sh v3 ${{ fromJSON('["", "debug"]')[github.event.inputs.debug == 'on'] }}
           mkdir -p dist
           mv *.AppImage* dist/
 
@@ -64,7 +71,7 @@ jobs:
         run: |
           rm -rf ./AppDir || true
           sudo pacman -R --noconfirm sudachi || true
-          chmod +x ./sudachi-appimage.sh && ./sudachi-appimage.sh steamdeck
+          chmod +x ./sudachi-appimage.sh && ./sudachi-appimage.sh steamdeck ${{ fromJSON('["", "debug"]')[github.event.inputs.debug == 'on'] }}
           mkdir -p dist
           mv *.AppImage* dist/
 
