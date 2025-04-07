@@ -5,8 +5,8 @@ set -ex
 export APPIMAGE_EXTRACT_AND_RUN=1
 export ARCH="$(uname -m)"
 
-REPO="https://github.com/emuplace/sudachi.emuplace.app/releases/download/v1.0.14/latest.zip"
 VERSION="1.0.14"
+REPO="https://github.com/emuplace/sudachi.emuplace.app/releases/download/v$VERSION/latest.zip"
 LIB4BN="https://raw.githubusercontent.com/VHSgunzo/sharun/refs/heads/main/lib4bin"
 URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
 
@@ -55,6 +55,7 @@ cp setup.sh sudachi/
    	 #sed -i -e 's/SDL_GetWindowProperties(window)/SDL_GetWindowProperties(render_window)/g' src/sudachi_cmd/emu_window/emu_window_sdl3_vk.cpp
     	#cd externals/xbyak && git checkout a1ac3750f9a639b5a6c6d6c7da4259b8d6790989 && cd ../..
    	 #sed -i -e 's/1318ab14aae14db20085441cd71366891a9c9d0c/c82f74667287d3dc386bce81e44964370c91a289/' vcpkg.json
+     	cd externals/SDL && git checkout 2359383fc187386204c3bb22de89655a494cd128 && cd ../..
 
 	mkdir build
 	cd build
