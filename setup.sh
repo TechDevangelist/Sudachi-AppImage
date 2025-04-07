@@ -23,7 +23,7 @@ submodule_paths=(
     "externals/vcpkg"
     "externals/nx_tzdb/tzdb_to_nx"
     "externals/cubeb"
-    "externals/SDL3"
+    "externals/SDL"
 )
 
 for path in "${submodule_paths[@]}"; do
