@@ -38,7 +38,7 @@ jobs:
           #  name: "Sudachi build (Normal)"
           #  optimized: false
           #  arch: aarch64
-    container: ubuntu:22.04
+    container: fedora:36
     steps:
       - uses: actions/checkout@v4
         with:
