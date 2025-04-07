@@ -5,7 +5,7 @@ set -ex
 export APPIMAGE_EXTRACT_AND_RUN=1
 export ARCH="$(uname -m)"
 
-REPO="https://github.com/emuplace/sudachi.emuplace.app/releases/download/v1.0.15/latest.zip"
+REPO="https://github.com/emuplace/sudachi.emuplace.app/releases/download/v1.0.14/latest.zip"
 VERSION="1.0.14"
 LIB4BN="https://raw.githubusercontent.com/VHSgunzo/sharun/refs/heads/main/lib4bin"
 URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
