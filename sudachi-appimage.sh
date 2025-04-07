@@ -52,22 +52,22 @@ sed -i -e 's/s\\c/s\/c/' sudachi/setup.sh
   	unix2dos ../patches/fmt11-support.patch
   	patch -p1 -l --binary < ../patches/fmt11-support.patch
 
-   	sed -i -e 's/FFmpeg 4.3 REQUIRED QUIET COMPONENTS/FFmpeg REQUIRED QUIET COMPONENTS/' CMakeLists.txt
-    sed -i -e 's/SDL_GetWindowProperties(window)/SDL_GetWindowProperties(render_window)/g' src/sudachi_cmd/emu_window/emu_window_sdl3_vk.cpp
-    #cd externals/xbyak && git checkout a1ac3750f9a639b5a6c6d6c7da4259b8d6790989 && cd ../..
-    #sed -i -e 's/1318ab14aae14db20085441cd71366891a9c9d0c/c82f74667287d3dc386bce81e44964370c91a289/' vcpkg.json
+   	#sed -i -e 's/FFmpeg 4.3 REQUIRED QUIET COMPONENTS/FFmpeg REQUIRED QUIET COMPONENTS/' CMakeLists.txt
+    	sed -i -e 's/SDL_GetWindowProperties(window)/SDL_GetWindowProperties(render_window)/g' src/sudachi_cmd/emu_window/emu_window_sdl3_vk.cpp
+    	#cd externals/xbyak && git checkout a1ac3750f9a639b5a6c6d6c7da4259b8d6790989 && cd ../..
+    	#sed -i -e 's/1318ab14aae14db20085441cd71366891a9c9d0c/c82f74667287d3dc386bce81e44964370c91a289/' vcpkg.json
 
 	mkdir build
 	cd build
 	cmake .. -GNinja $DEBUG \
-		-DSUDACHI_USE_BUNDLED_VCPKG=OFF \
-		-DSUDACHI_USE_BUNDLED_QT=OFF \
+		-DSUDACHI_USE_BUNDLED_VCPKG=ON \
+		-DSUDACHI_USE_BUNDLED_QT=ON \
 		-DUSE_SYSTEM_QT=ON \
 		-DSUDACHI_USE_BUNDLED_FFMPEG=ON \
 		-DSUDACHI_USE_BUNDLED_SDL3=ON \
 		-DSUDACHI_USE_EXTERNAL_SDL3=OFF \
 		-DSUDACHI_TESTS=OFF \
-		-DSUDACHI_USE_QT_WEB_ENGINE=OFF \
+		-DSUDACHI_USE_QT_WEB_ENGINE=ON \
 		-DENABLE_QT_TRANSLATION=ON \
 		-DUSE_DISCORD_PRESENCE=OFF \
   		-DSUDACHI_ENABLE_LTO=ON \
@@ -109,26 +109,26 @@ xvfb-run -a -- ./lib4bin -p -v -e -s -k \
 	/usr/lib/libXss.so* \
 	/usr/lib/libdecor-0.so* \
 	/usr/lib/libgamemode.so* \
- 	/usr/lib/qt5/plugins/audio/* \
-	/usr/lib/qt5/plugins/bearer/* \
-	/usr/lib/qt5/plugins/imageformats/* \
-	/usr/lib/qt5/plugins/iconengines/* \
-	/usr/lib/qt5/plugins/platforms/* \
-	/usr/lib/qt5/plugins/platformthemes/* \
-	/usr/lib/qt5/plugins/platforminputcontexts/* \
-	/usr/lib/qt5/plugins/styles/* \
-	/usr/lib/qt5/plugins/xcbglintegrations/* \
-	/usr/lib/qt5/plugins/wayland-*/* \
-	/usr/lib/qt6/plugins/audio/* \
-	/usr/lib/qt6/plugins/bearer/* \
-	/usr/lib/qt6/plugins/imageformats/* \
-	/usr/lib/qt6/plugins/iconengines/* \
-	/usr/lib/qt6/plugins/platforms/* \
-	/usr/lib/qt6/plugins/platformthemes/* \
-	/usr/lib/qt6/plugins/platforminputcontexts/* \
-	/usr/lib/qt6/plugins/styles/* \
-	/usr/lib/qt6/plugins/xcbglintegrations/* \
-	/usr/lib/qt6/plugins/wayland-*/* \
+ 	#/usr/lib/qt5/plugins/audio/* \
+	#/usr/lib/qt5/plugins/bearer/* \
+	#/usr/lib/qt5/plugins/imageformats/* \
+	#/usr/lib/qt5/plugins/iconengines/* \
+	#/usr/lib/qt5/plugins/platforms/* \
+	#/usr/lib/qt5/plugins/platformthemes/* \
+	#/usr/lib/qt5/plugins/platforminputcontexts/* \
+	#/usr/lib/qt5/plugins/styles/* \
+	#/usr/lib/qt5/plugins/xcbglintegrations/* \
+	#/usr/lib/qt5/plugins/wayland-*/* \
+	#/usr/lib/qt6/plugins/audio/* \
+	#/usr/lib/qt6/plugins/bearer/* \
+	#/usr/lib/qt6/plugins/imageformats/* \
+	#/usr/lib/qt6/plugins/iconengines/* \
+	#/usr/lib/qt6/plugins/platforms/* \
+	#/usr/lib/qt6/plugins/platformthemes/* \
+	#/usr/lib/qt6/plugins/platforminputcontexts/* \
+	#/usr/lib/qt6/plugins/styles/* \
+	#/usr/lib/qt6/plugins/xcbglintegrations/* \
+	#/usr/lib/qt6/plugins/wayland-*/* \
 	/usr/lib/pulseaudio/* \
 	/usr/lib/pipewire-0.3/* \
 	/usr/lib/spa-0.2/*/* \
