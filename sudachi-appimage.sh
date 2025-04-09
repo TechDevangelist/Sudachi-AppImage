@@ -45,7 +45,7 @@ cp setup.sh sudachi/
 	#git submodule update --init --recursive -j$(nproc)
 
 	#Replaces 'boost::asio::io_service' with 'boost::asio::io_context' for compatibility with Boost.ASIO versions 1.74.0 and later
-	find src -type f -name '*.cpp' -exec sed -i 's/boost::asio::io_service/boost::asio::io_context/g' {} \;
+	#find src -type f -name '*.cpp' -exec sed -i 's/boost::asio::io_service/boost::asio::io_context/g' {} \;
 
  	# Apply patches
   	unix2dos ../patches/fmt11-support.patch
