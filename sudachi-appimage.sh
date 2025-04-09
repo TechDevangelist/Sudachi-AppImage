@@ -162,6 +162,6 @@ echo "Generating AppImage..."
 	--header uruntime \
 	-i ./AppDir -o Sudachi-"$VERSION"-anylinux-"$ARCH".AppImage
 
-echo "Generating zsync file..."
-zsyncmake *.AppImage -u *.AppImage
+#echo "Generating zsync file..."
+#zsyncmake *.AppImage -u *.AppImage
 echo "All Done!"
