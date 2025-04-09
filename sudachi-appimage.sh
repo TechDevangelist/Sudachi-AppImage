@@ -5,7 +5,7 @@ set -ex
 export APPIMAGE_EXTRACT_AND_RUN=1
 export ARCH="$(uname -m)"
 
-VERSION="1.0.15"
+VERSION="1.0.14"
 REPO="https://github.com/emuplace/sudachi.emuplace.app/releases/download/v$VERSION/latest.zip"
 LIB4BN="https://raw.githubusercontent.com/VHSgunzo/sharun/refs/heads/main/lib4bin"
 URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
@@ -37,8 +37,7 @@ UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*$ARC
 # BUILD SUDACHI
 wget --no-verbose --show-progress --progress=dot:mega $REPO
 unzip -q latest -d sudachi
-dos2unix sudachi/setup.sh
-sed -i -e 's/s\\c/s\/c/' sudachi/setup.sh
+cp setup.sh sudachi/
 
 (
 	cd ./sudachi
@@ -56,6 +55,8 @@ sed -i -e 's/s\\c/s\/c/' sudachi/setup.sh
     	sed -i -e 's/SDL_GetWindowProperties(window)/SDL_GetWindowProperties(render_window)/g' src/sudachi_cmd/emu_window/emu_window_sdl3_vk.cpp
     	#cd externals/xbyak && git checkout a1ac3750f9a639b5a6c6d6c7da4259b8d6790989 && cd ../..
     	#sed -i -e 's/1318ab14aae14db20085441cd71366891a9c9d0c/c82f74667287d3dc386bce81e44964370c91a289/' vcpkg.json
+     	# Pin SDL2
+     	cd externals/SDL && git checkout 2359383fc187386204c3bb22de89655a494cd128 && cd ../..
 
 	mkdir build
 	cd build
@@ -64,8 +65,8 @@ sed -i -e 's/s\\c/s\/c/' sudachi/setup.sh
 		-DSUDACHI_USE_BUNDLED_QT=OFF \
 		-DUSE_SYSTEM_QT=ON \
 		-DSUDACHI_USE_BUNDLED_FFMPEG=ON \
-		-DSUDACHI_USE_BUNDLED_SDL3=ON \
-		-DSUDACHI_USE_EXTERNAL_SDL3=OFF \
+		-DSUDACHI_USE_BUNDLED_SDL2=ON \
+		-DSUDACHI_USE_EXTERNAL_SDL2=OFF \
 		-DSUDACHI_TESTS=OFF \
 		-DSUDACHI_USE_QT_WEB_ENGINE=ON \
 		-DENABLE_QT_TRANSLATION=ON \
